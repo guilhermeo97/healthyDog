@@ -1,0 +1,16 @@
+{
+  "name": "healthyDog",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app_healthy_dog",
+  "workspaceFolder": "/healthy_dog",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [3000]
+}

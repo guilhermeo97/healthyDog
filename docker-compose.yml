@@ -1,0 +1,21 @@
+services:
+  app_healthy_dog:
+    build: .
+    depends_on:
+      - db_healthy_dog
+
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/healthy_dog
+
+    environment:
+      - NODE_ENV=development
+
+  db_healthy_dog:
+    image: mysql:8.0.40-bookworm
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '3307:3306'
