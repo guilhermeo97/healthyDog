@@ -1,5 +1,5 @@
 export class School {
-  private id?: number;
+  private id: number;
   private name: string;
   private cnpj: string;
   private address: string;
@@ -15,22 +15,24 @@ export class School {
     phone: string,
     email: string,
     id?: number,
+    createdAt?: Date,
+    updatedAt?: Date,
   ) {
-    this.id = id || undefined;
+    this.id = id ? id : 0;
     this.name = name;
     this.cnpj = cnpj;
     this.address = address;
     this.phone = phone;
     this.email = email;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this.createdAt = createdAt ? createdAt : new Date();
+    this.updatedAt = updatedAt ? updatedAt : new Date();
   }
 
   public getId(): number | undefined {
     return this.id;
   }
 
-  public setId(id: number | undefined): void {
+  public setId(id: number): void {
     this.id = id;
   }
 

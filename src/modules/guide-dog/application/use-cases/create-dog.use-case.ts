@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGuideDogDto } from '../dto/create-guide-dog.dto';
-import { GuideDog } from '../../domain/guide-dog';
 
 @Injectable()
 export class CreateDogUseCase {
@@ -8,8 +6,8 @@ export class CreateDogUseCase {
     // Constructor logic here
   }
 
-  execute(guideDogDto: CreateGuideDogDto) {
-    const guideDog = new GuideDog();
-    console.log('CreateDogUseCase executed');
-  }
+  // execute(guideDogDto: CreateGuideDogDto) {
+  //   const guideDog = new GuideDog();
+  //   console.log('CreateDogUseCase executed');
+  // }
 }
