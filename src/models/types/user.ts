@@ -1,0 +1,29 @@
+import type { School } from "./school";
+
+export type User = {
+  id?: number;
+  school: School;
+  fullName: string;
+  cpf: string;
+  birthDate: Date;
+  acessType: string;
+  email: string;
+  phone: string;
+  password: string;
+  guideDog?: number;
+  state?: boolean;
+  created: Date;
+};
+
+// id,
+// school,
+// fullName,
+// cpf,
+// birthDate
+// acessType,
+// email,
+// phone,
+// password,
+// guideDog,
+// state,
+// created
