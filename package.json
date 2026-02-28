@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch src --exec tsx src/app.ts",
-    "migrate": "tsx src/database/migration.ts",
+    "migrate:up": "tsx src/database/migration-up.ts",
+    "migrate:down": "tsx src/database/migration-down.ts",
     "build": "tsc"
   },
   "keywords": [],
