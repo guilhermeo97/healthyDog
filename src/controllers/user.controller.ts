@@ -27,6 +27,7 @@ export default class UserController {
         acessType,
         email,
         phone,
+        address,
         password,
         guideDog,
       } = req.body;
@@ -39,10 +40,10 @@ export default class UserController {
         acessType,
         email,
         phone,
+        address,
         password,
         guideDog,
       );
-
       const valid = await validate(dto).then((errors) => {
         if (errors.length > 0) {
           const messages = errors

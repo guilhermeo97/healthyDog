@@ -5,31 +5,19 @@ export default class UserModel {
   constructor() {}
   async create(user: User) {
     try {
-      const {
-        school,
-        fullName,
-        cpf,
-        birthDate,
-        acessType,
-        email,
-        phone,
-        password,
-        guideDog,
-        state,
-      } = user;
       const query = await Database.query(
-        "INSERT INTO users (school, full_name, cpf, birth_date, acess_type, email, phone, password, guide_dog, state, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO users (school_id, name, cpf, birth_date, type_acess, email, phone, address, password, guidedog_id, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
-          school,
-          fullName,
-          cpf,
-          birthDate,
-          acessType,
-          email,
-          phone,
-          password,
-          guideDog,
-          state,
+          user.school,
+          user.fullName,
+          user.cpf,
+          user.birthDate,
+          user.acessType,
+          user.email,
+          user.phone,
+          user.address,
+          user.password,
+          user.guideDog,
           new Date(),
         ],
       );
@@ -50,15 +38,16 @@ export default class UserModel {
 
       const user: User = {
         id: row.id,
-        school: row.school,
-        fullName: row.full_name,
+        school: row.school_id,
+        fullName: row.name,
         cpf: row.cpf,
         birthDate: row.birth_date,
-        acessType: row.acess_type,
+        acessType: row.type_acess,
         email: row.email,
         phone: row.phone,
+        address: row.address,
         password: row.password,
-        guideDog: row.guide_dog === 1 ? 1 : 0,
+        guideDog: row.guidedog_id ? row.guidedog_id : null,
         state: row.state === 1 ? true : false,
         created: row.created,
       };
@@ -75,7 +64,6 @@ export default class UserModel {
       if (!findId) {
         return null;
       }
-
       findId.school = (user.school as any) || findId.school;
       findId.fullName = user.fullName || findId.fullName;
       findId.cpf = user.cpf || findId.cpf;
@@ -83,11 +71,15 @@ export default class UserModel {
       findId.acessType = user.acessType || findId.acessType;
       findId.email = user.email || findId.email;
       findId.phone = user.phone || findId.phone;
+      findId.address = user.address || findId.address;
       findId.password = user.password || findId.password;
       findId.guideDog =
-        user.guideDog !== undefined ? user.guideDog : findId.guideDog;
+        findId.guideDog === null && user.guideDog !== undefined
+          ? user.guideDog
+          : findId.guideDog;
+      findId.state = user.state !== undefined ? user.state : findId.state;
 
-      const sql = `UPDATE users SET school = ?, full_name = ?, cpf = ?, birth_date = ?, acess_type = ?, email = ?, phone = ?, password = ?, guide_dog = ?, state = ? WHERE id = ?`;
+      const sql = `UPDATE users SET school_id = ?, name = ?, cpf = ?, birth_date = ?, type_acess = ?, email = ?, phone = ?, address = ?, password = ?, guidedog_id = ?, state = ? WHERE id = ?`;
       const query = await Database.query(sql, [
         findId.school,
         findId.fullName,
@@ -96,6 +88,7 @@ export default class UserModel {
         findId.acessType,
         findId.email,
         findId.phone,
+        findId.address,
         findId.password,
         findId.guideDog,
         findId.state ? 1 : 0,

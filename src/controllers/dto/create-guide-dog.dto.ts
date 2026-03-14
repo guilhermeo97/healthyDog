@@ -1,13 +1,22 @@
-import { IsNotEmpty, IsString, MinLength, IsEnum, IsDateString, IsNumber, IsOptional, IsBoolean } from "class-validator";
+import {
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  IsEnum,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsBoolean,
+} from "class-validator";
 
 export default class CreateGuideDogDto {
   @IsNotEmpty({ message: "School ID is required" })
   @IsNumber({}, { message: "School ID must be a number" })
   schoolId: number;
 
-  @IsNotEmpty({ message: "User ID is required" })
+  @IsOptional()
   @IsNumber({}, { message: "User ID must be a number" })
-  userId: number;
+  userId: number | null | undefined;
 
   @IsNotEmpty({ message: "Name is required" })
   @IsString({ message: "Name must be a string" })
@@ -32,27 +41,29 @@ export default class CreateGuideDogDto {
   deathDate?: string;
 
   @IsOptional()
-  @IsDateString({}, { message: "Retirement date must be an ISO 8601 date string" })
+  @IsDateString(
+    {},
+    { message: "Retirement date must be an ISO 8601 date string" },
+  )
   retirementDate?: string;
 
   @IsNotEmpty({ message: "Weight is required" })
   @IsNumber({}, { message: "Weight must be a number" })
   weight: number;
 
-
   constructor(
     schoolId: number,
-    userId: number,
+    userId: number | null | undefined,
     name: string,
     gender: "M" | "F",
     breed: string,
     birthDate: string,
     deathDate?: string,
     retirementDate?: string,
-    weight?: number
+    weight?: number,
   ) {
     this.schoolId = schoolId;
-    this.userId = userId;
+    this.userId = userId === undefined ? null : userId;
     this.name = name.trim();
     this.gender = gender;
     this.breed = breed.trim();

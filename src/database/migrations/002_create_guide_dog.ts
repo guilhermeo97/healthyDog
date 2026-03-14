@@ -5,7 +5,7 @@ export async function up() {
     `CREATE TABLE guide_dogs(
         id int AUTO_INCREMENT PRIMARY KEY,
         id_escola int NOT NULL,
-        id_user int NOT NULL,
+        id_user int NULL,
         name varchar(100) NOT NULL,
         gender enum('M','F') NOT NULL,
         breed varchar(100) NOT NULL,
@@ -16,12 +16,12 @@ export async function up() {
         state tinyint(1) DEFAULT '1',
         created datetime DEFAULT CURRENT_TIMESTAMP(),
         FOREIGN KEY (id_escola) REFERENCES schools(id)
-    );`
+    );`,
   );
 }
 
 export async function down() {
   await Database.query(
-    `ALTER TABLE guide_dogs DROP FOREIGN KEY guide_dogs_ibfk_1; DROP TABLE IF EXISTS guide_dogs;`
+    `ALTER TABLE guide_dogs DROP FOREIGN KEY guide_dogs_ibfk_1; DROP TABLE IF EXISTS guide_dogs;`,
   );
 }

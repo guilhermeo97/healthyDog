@@ -37,13 +37,17 @@ export default class CreateUserDto {
   @MinLength(10, { message: "Phone must be at least 10 characters long" })
   phone: string;
 
+  @IsString({ message: "Address must be a string" })
+  @MinLength(5, { message: "Address must be at least 5 characters long" })
+  address: string;
+
   @IsNotEmpty({ message: "Password is required" })
   @IsString({ message: "Password must be a string" })
   @MinLength(6, { message: "Password must be at least 6 characters long" })
   password: string;
 
   @IsOptional()
-  guideDog?: number;
+  guideDog?: number | undefined | null;
 
   constructor(
     school: number,
@@ -53,6 +57,7 @@ export default class CreateUserDto {
     acessType: string,
     email: string,
     phone: string,
+    address: string,
     password: string,
     guideDog?: number,
   ) {
@@ -63,7 +68,8 @@ export default class CreateUserDto {
     this.acessType = acessType.trim();
     this.email = email.trim();
     this.phone = phone.trim();
+    this.address = address.trim();
     this.password = password;
-    if (guideDog !== undefined) this.guideDog = guideDog;
+    this.guideDog = guideDog === undefined ? null : guideDog;
   }
 }

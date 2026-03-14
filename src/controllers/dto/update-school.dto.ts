@@ -5,39 +5,39 @@ export default class UpdateSchoolDto {
   @IsOptional()
   @IsString({ message: "Name must be a string" })
   @MinLength(5, { message: "Name must be at least 3 characters long" })
-  name: string;
+  name: string | undefined;
 
   @IsOptional()
   @IsString({ message: "CNPJ must be a string" })
   @MinLength(14, { message: "CNPJ must be at least 14 characters long" })
   @IsCNPJ({ message: "CNPJ must be longer than name" })
-  cnpj: string;
+  cnpj: string | undefined;
 
   @IsOptional()
   @IsEmail()
-  email: string;
+  email: string | undefined;
 
   @IsOptional()
   @IsString({ message: "Phone must be a string" })
   @MinLength(10, { message: "Phone must be at least 10 characters long" })
-  phone: string;
+  phone: string | undefined;
 
   @IsOptional()
   @IsString({ message: "Address must be a string" })
   @MinLength(5, { message: "Address must be at least 5 characters long" })
-  address: string;
+  address: string | undefined;
 
   constructor(
-    name: string,
-    cnpj: string,
-    email: string,
-    phone: string,
-    address: string
+    name?: string,
+    cnpj?: string,
+    email?: string,
+    phone?: string,
+    address?: string,
   ) {
-    this.name = name.trim();
-    this.cnpj = cnpj.trim();
-    this.email = email.trim();
-    this.phone = phone.trim();
-    this.address = address.trim();
+    this.name = name?.trim() || undefined;
+    this.cnpj = cnpj?.trim() || undefined;
+    this.email = email?.trim() || undefined;
+    this.phone = phone?.trim() || undefined;
+    this.address = address?.trim() || undefined;
   }
 }

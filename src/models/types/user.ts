@@ -9,9 +9,10 @@ export type User = {
   acessType: string;
   email: string;
   phone: string;
+  address: string;
   password: string;
-  guideDog?: number | undefined;
-  state?: boolean;
+  guideDog?: number | null | undefined;
+  state: boolean;
   created: Date;
 };
 

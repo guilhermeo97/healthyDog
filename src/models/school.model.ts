@@ -53,6 +53,7 @@ export default class SchoolModel {
       throw new Error("Error creating school: " + error);
     }
   }
+
   async getId(id: number) {
     try {
       const sql = "SELECT * FROM schools WHERE id = ?";

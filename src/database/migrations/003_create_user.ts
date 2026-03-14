@@ -4,8 +4,8 @@ export async function up() {
   await Database.query(
     `CREATE TABLE users(
         id int AUTO_INCREMENT PRIMARY KEY,
-        id_escola int NOT NULL,
-        id_cao_guia int,
+        school_id int NOT NULL,
+        guidedog_id int NULL,
         name varchar(255) NOT NULL,
         email varchar(255) NOT NULL UNIQUE,
         password varchar(255) NOT NULL,
@@ -16,14 +16,27 @@ export async function up() {
         address varchar(255) NOT NULL,
         state tinyint(1) DEFAULT '1',
         created datetime DEFAULT CURRENT_TIMESTAMP(),
-        FOREIGN KEY (id_escola) REFERENCES schools(id),
-        FOREIGN KEY (id_cao_guia) REFERENCES guide_dogs(id)
-    );`
+        FOREIGN KEY (school_id) REFERENCES schools(id),
+        FOREIGN KEY (guidedog_id) REFERENCES guide_dogs(id)
+    );`,
   );
 }
 
 export async function down() {
   await Database.query(
-    `ALTER TABLE users DROP FOREIGN KEY users_ibfk_1; ALTER TABLE users DROP FOREIGN KEY users_ibfk_2; DROP TABLE IF EXISTS users;`
+    `ALTER TABLE users DROP FOREIGN KEY users_ibfk_1; ALTER TABLE users DROP FOREIGN KEY users_ibfk_2; DROP TABLE IF EXISTS users;`,
   );
 }
+
+// id,
+// school,
+// fullName,
+// cpf,
+// birthDate
+// acessType,
+// email,
+// phone,
+// password,
+// guideDog,
+// state,
+// created

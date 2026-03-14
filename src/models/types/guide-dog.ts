@@ -1,7 +1,7 @@
 export type GuideDog = {
   id?: number;
   schoolId: number; // corresponds to id_escola
-  userId: number; // corresponds to id_user
+  userId: number | null | undefined; // corresponds to id_user
   name: string;
   gender: "M" | "F";
   breed: string;
@@ -9,6 +9,19 @@ export type GuideDog = {
   deathDate?: Date;
   retirementDate?: Date;
   weight: number;
-  state?: boolean;
+  state: boolean;
   created: Date;
 };
+
+// id,
+// schoolId,
+// userId,
+// name,
+// gender
+// breed,
+// birthDate,
+// deathDate,
+// retirementDate,
+// weight,
+// state,
+// created

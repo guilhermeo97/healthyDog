@@ -1,3 +1,4 @@
+import { Console } from "console";
 import Database from "../database/database";
 import type { GuideDog } from "./types/guide-dog";
 
@@ -16,10 +17,9 @@ export default class GuideDogModel {
         deathDate,
         retirementDate,
         weight,
-        state,
       } = guideDog;
-
-      const sql = `INSERT INTO guide_dogs (id_escola, id_user, name, gender, breed, birth_date, death_date, retirement_date, weight, state, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      console.log(guideDog);
+      const sql = `INSERT INTO guide_dogs (id_escola, id_user, name, gender, breed, birth_date, death_date, retirement_date, weight, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       const query = await Database.query(sql, [
         schoolId,
         userId,
@@ -30,7 +30,6 @@ export default class GuideDogModel {
         deathDate || null,
         retirementDate || null,
         weight,
-        state ? 1 : 0,
         new Date(),
       ]);
       return query;

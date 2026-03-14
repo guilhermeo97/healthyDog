@@ -11,7 +11,7 @@ export async function up() {
         address varchar(255) NOT NULL,
         state tinyint(1) DEFAULT '1',
         created datetime DEFAULT CURRENT_TIMESTAMP()
-    );`
+    );`,
   );
 }
 
