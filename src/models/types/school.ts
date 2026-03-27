@@ -5,8 +5,8 @@ export type School = {
   email: string;
   phone: string;
   address: string;
-  state?: boolean | number;
-  created?: Date;
+  state: boolean;
+  created: Date;
 };
 
 // id,

@@ -2,7 +2,7 @@ import type { School } from "./school";
 
 export type User = {
   id?: number;
-  school: School;
+  school: number;
   fullName: string;
   cpf: string;
   birthDate: Date;

@@ -53,16 +53,28 @@ export default class UserController {
         }
       });
       if (valid) return valid;
-
-      const user: User = dto as any;
+      console.log("Creating user with data:", dto);
+      const user: User = {
+        school: dto.school,
+        fullName: dto.fullName,
+        cpf: dto.cpf,
+        birthDate: dto.birthDate,
+        acessType: dto.acessType,
+        email: dto.email,
+        phone: dto.phone,
+        address: dto.address,
+        password: dto.password,
+        guideDog: dto.guideDog,
+        state: true,
+        created: new Date(),
+      };
       const createResult = await this.userModel.create(user);
-      const newUser = await this.userModel.getId(createResult.rows.insertId);
-      if (!newUser) {
+      if (!createResult) {
         return res
           .status(404)
           .json({ message: "User not found after creation" });
       }
-      return res.status(201).json(newUser);
+      return res.status(201).json(createResult);
     } catch (error) {
       next(error);
     }
@@ -83,7 +95,7 @@ export default class UserController {
 
       const user = await this.userModel.getId(id);
       if (!user) {
-        return res.status(204).send();
+        return res.status(204).json({ message: "User not found" });
       }
       return res.status(200).json(user);
     } catch (error) {
@@ -105,7 +117,7 @@ export default class UserController {
       }
       const users = await this.userModel.getAll(status);
       if (!users) {
-        return res.status(204).send();
+        return res.status(204).json({ message: "No users found" });
       }
       return res.status(200).json(users);
     } catch (error) {
@@ -165,20 +177,22 @@ export default class UserController {
 
       const user: Partial<User> = {
         id,
-        school,
-        fullName,
-        cpf,
-        birthDate,
-        acessType,
-        email,
-        phone,
-        password,
-        guideDog,
-        state,
+        school: dto.school,
+        fullName: dto.fullName,
+        cpf: dto.cpf,
+        birthDate: dto.birthDate,
+        acessType: dto.acessType,
+        email: dto.email,
+        phone: dto.phone,
+        password: dto.password,
+        guideDog: dto.guideDog,
+        state: dto.state,
       };
       const updated = await this.userModel.update(user);
       if (!updated) {
-        return res.status(204).send();
+        return res
+          .status(204)
+          .json({ message: "User not found or no changes made" });
       }
       return res.status(200).json(updated);
     } catch (error) {

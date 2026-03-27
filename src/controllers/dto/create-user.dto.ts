@@ -23,7 +23,7 @@ export default class CreateUserDto {
 
   @IsNotEmpty({ message: "Birth date is required" })
   @IsDateString({}, { message: "Birth date must be an ISO 8601 date string" })
-  birthDate: string;
+  birthDate: Date;
 
   @IsNotEmpty({ message: "Access type is required" })
   @IsString({ message: "Access type must be a string" })
@@ -53,7 +53,7 @@ export default class CreateUserDto {
     school: number,
     fullName: string,
     cpf: string,
-    birthDate: string,
+    birthDate: Date,
     acessType: string,
     email: string,
     phone: string,

@@ -34,18 +34,18 @@ export default class CreateGuideDogDto {
 
   @IsNotEmpty({ message: "Birth date is required" })
   @IsDateString({}, { message: "Birth date must be an ISO 8601 date string" })
-  birthDate: string;
+  birthDate: Date;
 
   @IsOptional()
   @IsDateString({}, { message: "Death date must be an ISO 8601 date string" })
-  deathDate?: string;
+  deathDate?: Date | null | undefined;
 
   @IsOptional()
   @IsDateString(
     {},
     { message: "Retirement date must be an ISO 8601 date string" },
   )
-  retirementDate?: string;
+  retirementDate?: Date | null | undefined;
 
   @IsNotEmpty({ message: "Weight is required" })
   @IsNumber({}, { message: "Weight must be a number" })
@@ -57,9 +57,9 @@ export default class CreateGuideDogDto {
     name: string,
     gender: "M" | "F",
     breed: string,
-    birthDate: string,
-    deathDate?: string,
-    retirementDate?: string,
+    birthDate: Date,
+    deathDate?: Date | null | undefined,
+    retirementDate?: Date | null | undefined,
     weight?: number,
   ) {
     this.schoolId = schoolId;
@@ -68,8 +68,8 @@ export default class CreateGuideDogDto {
     this.gender = gender;
     this.breed = breed.trim();
     this.birthDate = birthDate;
-    if (deathDate !== undefined) this.deathDate = deathDate;
-    if (retirementDate !== undefined) this.retirementDate = retirementDate;
-    if (weight !== undefined) this.weight = weight;
+    this.deathDate = deathDate || null;
+    this.retirementDate = retirementDate || null;
+    this.weight = weight || 0;
   }
 }

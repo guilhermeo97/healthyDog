@@ -4,19 +4,22 @@ import CheckConnectionDb from "../database/check-connection";
 import SchoolController from "../controllers/school.controller";
 import UserController from "../controllers/user.controller";
 import GuideDogController from "../controllers/guide-dog.controller";
+import MedicationController from "../controllers/medication.controller";
 
 const router = Router();
 const schoolController = new SchoolController();
 const userController = new UserController();
 const guideController = new GuideDogController();
-// Rota de teste
+const medicationController = new MedicationController();
+
+// Test's route
 router.get("/", (req: Request, res: Response) => {
   res.status(200).json({ status: "🐶 HealthyDog API funcionando!" });
 });
 
 router.get("/status", CheckConnectionDb.testConnection);
 
-// Rotas de School
+// School's routes
 
 router.get(
   "/school/all/:status",
@@ -38,12 +41,14 @@ router.delete(
   schoolController.deleteSchool.bind(schoolController),
 );
 
-// Rotas de User
+// User's routes
 router.get("/user/all/:status", userController.getUsers.bind(userController));
 router.get("/user/:id", userController.getUserById.bind(userController));
 router.post("/user", userController.createUser.bind(userController));
 router.patch("/user/:id", userController.updateUser.bind(userController));
 router.delete("/user/:id", userController.deleteUser.bind(userController));
+
+// Guide dog's routes
 
 router.get(
   "/guidedog/all/:status",
@@ -61,6 +66,28 @@ router.patch(
 router.delete(
   "/guidedog/:id",
   guideController.deleteGuideDog.bind(guideController),
+);
+
+// Medication's routes
+router.post(
+  "/medication",
+  medicationController.createMedication.bind(medicationController),
+);
+router.get(
+  "/medication/all",
+  medicationController.getAllMedications.bind(medicationController),
+);
+router.get(
+  "/medication/:id",
+  medicationController.getMedicationById.bind(medicationController),
+);
+router.patch(
+  "/medication/:id",
+  medicationController.updateMedication.bind(medicationController),
+);
+router.delete(
+  "/medication/:id",
+  medicationController.deleteMedication.bind(medicationController),
 );
 
 export { router };

@@ -54,15 +54,27 @@ export default class GuideDogController {
       });
       if (valid) return valid;
 
-      const guideDog: GuideDog = dto as any;
+      const guideDog: GuideDog = {
+        schoolId: dto.schoolId,
+        userId: dto.userId,
+        name: dto.name,
+        gender: dto.gender,
+        breed: dto.breed,
+        birthDate: dto.birthDate,
+        deathDate: dto.deathDate,
+        retirementDate: dto.retirementDate,
+        weight: dto.weight,
+        state: true,
+        created: new Date(),
+      };
       const createResult = await this.guideDogModel.create(guideDog);
-      const newDog = await this.guideDogModel.getId(createResult.rows.insertId);
-      if (!newDog) {
+      //const newDog = await this.guideDogModel.getId(createResult.rows.insertId);
+      if (!createResult) {
         return res
           .status(404)
           .json({ message: "Guide dog not found after creation" });
       }
-      return res.status(201).json(newDog);
+      return res.status(201).json(createResult);
     } catch (error) {
       next(error);
     }
@@ -83,7 +95,7 @@ export default class GuideDogController {
 
       const dog = await this.guideDogModel.getId(id);
       if (!dog) {
-        return res.status(204).send();
+        return res.status(204).json({ message: "Guide dog not found" });
       }
       return res.status(200).json(dog);
     } catch (error) {
@@ -105,7 +117,9 @@ export default class GuideDogController {
       }
       const dogs = await this.guideDogModel.getAll(status);
       if (!dogs) {
-        return res.status(204).send();
+        return res
+          .status(204)
+          .json({ message: "No guide dogs found for the given status" });
       }
       return res.status(200).json(dogs);
     } catch (error) {
@@ -150,6 +164,7 @@ export default class GuideDogController {
         deathDate,
         retirementDate,
         weight,
+        state,
       );
 
       const valid = await validate(dto).then((errors) => {
@@ -164,20 +179,20 @@ export default class GuideDogController {
 
       const guideDog: Partial<GuideDog> = {
         id,
-        schoolId,
-        userId,
-        name,
-        gender,
-        breed,
-        birthDate,
-        deathDate,
-        retirementDate,
-        weight,
-        state,
+        schoolId: dto.schoolId,
+        userId: dto.userId,
+        name: dto.name,
+        gender: dto.gender,
+        breed: dto.breed,
+        birthDate: dto.birthDate,
+        deathDate: dto.deathDate,
+        retirementDate: dto.retirementDate,
+        weight: dto.weight,
+        state: dto.state,
       };
       const updated = await this.guideDogModel.update(guideDog);
       if (!updated) {
-        return res.status(204).send();
+        return res.status(204).json({ message: "Guide dog not found" });
       }
       return res.status(200).json(updated);
     } catch (error) {

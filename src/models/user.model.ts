@@ -6,7 +6,7 @@ export default class UserModel {
   async create(user: User) {
     try {
       const query = await Database.query(
-        "INSERT INTO users (school_id, name, cpf, birth_date, type_acess, email, phone, address, password, guidedog_id, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO users (school_id, name, cpf, birth_date, type_acess, email, phone, address, password, guidedog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           user.school,
           user.fullName,
@@ -18,10 +18,10 @@ export default class UserModel {
           user.address,
           user.password,
           user.guideDog,
-          new Date(),
         ],
       );
-      return query;
+      const newUser = await this.getId(query.rows.insertId);
+      return newUser;
     } catch (error) {
       throw new Error(`Error creating user: ${error}`);
     }
@@ -60,7 +60,7 @@ export default class UserModel {
 
   async update(user: Partial<User>) {
     try {
-      const findId: User | null = await this.getId(user.id!);
+      const findId = await this.getId(user.id!);
       if (!findId) {
         return null;
       }
@@ -121,7 +121,6 @@ export default class UserModel {
         return null;
       }
       const users: User[] = rows.map((user) => {
-        const state = user.state === 1 ? true : false;
         return {
           id: user.id,
           school: user.school,
@@ -132,12 +131,12 @@ export default class UserModel {
           email: user.email,
           phone: user.phone,
           password: user.password,
-          guideDog: user.guide_dog === 1 ? true : false,
-          state: state,
+          guideDog: user.guidedog_id ? user.guidedog_id : null,
+          state: user.state === 1 ? true : false,
           created: user.created,
         };
       });
-      return rows;
+      return users;
     } catch (error) {
       throw new Error(`Error fetching users: ${error}`);
     }

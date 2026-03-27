@@ -17,7 +17,6 @@ export default class SchoolModel {
         return null;
       }
       const schools: School[] = rows.map((school) => {
-        const state = school.state === 1 ? true : false;
         return {
           id: school.id,
           name: school.name,
@@ -25,7 +24,7 @@ export default class SchoolModel {
           email: school.email,
           phone: school.phone,
           address: school.address,
-          state: state,
+          state: school.state === 1 ? true : false,
           created: school.created,
         };
       });
@@ -48,7 +47,8 @@ export default class SchoolModel {
         phone,
         address,
       ]);
-      return query;
+      const findNewSchool = await this.getId(query.rows.insertId);
+      return findNewSchool;
     } catch (error) {
       throw new Error("Error creating school: " + error);
     }
@@ -58,9 +58,6 @@ export default class SchoolModel {
     try {
       const sql = "SELECT * FROM schools WHERE id = ?";
       const query = await Database.query(sql, [id.toString()]);
-      if (query.rows.length === 0) {
-        return null;
-      }
       if (query.rows.length === 0) {
         return null;
       }
@@ -85,30 +82,32 @@ export default class SchoolModel {
 
   async update(school: Partial<School>) {
     try {
-      const findId = await this.getId(school.id!);
-      if (!findId) {
+      const findSchool = await this.getId(school.id!);
+      if (!findSchool) {
         return null;
       }
-      findId.name = school.name || findId.name;
-      findId.cnpj = school.cnpj || findId.cnpj;
-      findId.email = school.email || findId.email;
-      findId.phone = school.phone || findId.phone;
-      findId.address = school.address || findId.address;
+      findSchool.name = school.name || findSchool.name;
+      findSchool.cnpj = school.cnpj || findSchool.cnpj;
+      findSchool.email = school.email || findSchool.email;
+      findSchool.phone = school.phone || findSchool.phone;
+      findSchool.address = school.address || findSchool.address;
+      findSchool.state =
+        school.state !== undefined ? school.state : findSchool.state;
 
-      console.log("School find: ", findId.name);
-      const sql = `UPDATE schools SET name = ?, cnpj = ?, email = ?, phone = ?, address = ? WHERE id = ?`;
+      const sql = `UPDATE schools SET name = ?, cnpj = ?, email = ?, phone = ?, address = ?, state = ? WHERE id = ?`;
       const query = await Database.query(sql, [
-        findId.name,
-        findId.cnpj,
-        findId.email,
-        findId.phone,
-        findId.address,
-        findId.id!.toString(),
+        findSchool.name,
+        findSchool.cnpj,
+        findSchool.email,
+        findSchool.phone,
+        findSchool.address,
+        findSchool.state,
+        findSchool.id!.toString(),
       ]);
       if (query.rows.affectedRows === 0) {
         return null;
       }
-      const updatedSchool = await this.getId(findId.id!);
+      const updatedSchool = await this.getId(findSchool.id!);
       return updatedSchool;
     } catch (error) {
       throw new Error("Error updating school: " + error);

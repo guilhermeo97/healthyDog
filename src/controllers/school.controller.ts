@@ -32,17 +32,22 @@ export default class SchoolController {
         }
       });
       if (valid) return valid;
-      const school: School = dto;
+      const school: School = {
+        name: dto.name,
+        cnpj: dto.cnpj,
+        email: dto.email,
+        phone: dto.phone,
+        address: dto.address,
+        state: true,
+        created: new Date(),
+      };
       const createSchool = await this.schoolModel.create(school);
-      const findNewSchool = await this.schoolModel.getId(
-        createSchool.rows.insertId
-      );
-      if (!findNewSchool) {
+      if (!createSchool) {
         return res
           .status(404)
           .json({ message: "School not found after creation" });
       }
-      return res.status(201).json(findNewSchool);
+      return res.status(201).json(createSchool);
     } catch (error) {
       next(error);
     }
@@ -60,13 +65,14 @@ export default class SchoolController {
 
     try {
       const id = +req.params.id;
+
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
 
       const findSchool = await this.schoolModel.getId(id);
       if (!findSchool) {
-        return res.status(204).send();
+        return res.status(204).json({ message: "School not found" });
       }
       return res.status(200).json(findSchool);
     } catch (error) {
@@ -116,7 +122,7 @@ export default class SchoolController {
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-      const { name, cnpj, email, phone, address } = req.body;
+      const { name, cnpj, email, phone, address, state } = req.body;
       const dto = new UpdateSchoolDto(name, cnpj, email, phone, address);
       const valid = await validate(dto).then((errors) => {
         if (errors.length > 0) {
@@ -127,10 +133,18 @@ export default class SchoolController {
         }
       });
       if (valid) return valid;
-      const school: Partial<School> = { id, name, cnpj, email, phone, address };
+      const school: Partial<School> = {
+        id,
+        name: dto.name,
+        cnpj: dto.cnpj,
+        email: dto.email,
+        phone: dto.phone,
+        address: dto.address,
+        state: dto.state,
+      };
       const update = await this.schoolModel.update(school);
       if (!update) {
-        return res.status(204).send();
+        return res.status(204).json({ message: "School not found" });
       }
       return res.status(200).send(update);
     } catch (error) {

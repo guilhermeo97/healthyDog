@@ -1,4 +1,11 @@
-import { IsEmail, IsOptional, IsString, MinLength, IsDateString, IsBoolean } from "class-validator";
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  MinLength,
+  IsDateString,
+  IsBoolean,
+} from "class-validator";
 
 export default class UpdateUserDto {
   @IsOptional()
@@ -16,7 +23,7 @@ export default class UpdateUserDto {
 
   @IsOptional()
   @IsDateString({}, { message: "Birth date must be an ISO 8601 date string" })
-  birthDate?: string;
+  birthDate?: Date;
 
   @IsOptional()
   @IsString({ message: "Access type must be a string" })
@@ -47,13 +54,13 @@ export default class UpdateUserDto {
     school?: number,
     fullName?: string,
     cpf?: string,
-    birthDate?: string,
+    birthDate?: Date,
     acessType?: string,
     email?: string,
     phone?: string,
     password?: string,
     guideDog?: number,
-    state?: boolean
+    state?: boolean,
   ) {
     if (school !== undefined) this.school = school;
     if (fullName !== undefined) this.fullName = fullName.trim();

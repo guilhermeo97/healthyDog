@@ -27,17 +27,22 @@ export default class UpdateSchoolDto {
   @MinLength(5, { message: "Address must be at least 5 characters long" })
   address: string | undefined;
 
+  @IsOptional()
+  state: boolean | undefined;
+
   constructor(
     name?: string,
     cnpj?: string,
     email?: string,
     phone?: string,
     address?: string,
+    state?: boolean,
   ) {
     this.name = name?.trim() || undefined;
     this.cnpj = cnpj?.trim() || undefined;
     this.email = email?.trim() || undefined;
     this.phone = phone?.trim() || undefined;
     this.address = address?.trim() || undefined;
+    this.state = state || undefined;
   }
 }

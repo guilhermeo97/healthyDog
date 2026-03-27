@@ -33,18 +33,18 @@ export default class UpdateGuideDogDto {
 
   @IsOptional()
   @IsDateString({}, { message: "Birth date must be an ISO 8601 date string" })
-  birthDate?: string;
+  birthDate?: Date;
 
   @IsOptional()
   @IsDateString({}, { message: "Death date must be an ISO 8601 date string" })
-  deathDate?: string;
+  deathDate?: Date | null | undefined;
 
   @IsOptional()
   @IsDateString(
     {},
     { message: "Retirement date must be an ISO 8601 date string" },
   )
-  retirementDate?: string;
+  retirementDate?: Date | null | undefined;
 
   @IsOptional()
   @IsNumber({}, { message: "Weight must be a number" })
@@ -60,9 +60,9 @@ export default class UpdateGuideDogDto {
     name?: string,
     gender?: "M" | "F",
     breed?: string,
-    birthDate?: string,
-    deathDate?: string,
-    retirementDate?: string,
+    birthDate?: Date,
+    deathDate?: Date | null | undefined,
+    retirementDate?: Date | null | undefined,
     weight?: number,
     state?: boolean,
   ) {

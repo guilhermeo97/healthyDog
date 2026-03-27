@@ -19,7 +19,7 @@ export default class GuideDogModel {
         weight,
       } = guideDog;
       console.log(guideDog);
-      const sql = `INSERT INTO guide_dogs (id_escola, id_user, name, gender, breed, birth_date, death_date, retirement_date, weight, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const sql = `INSERT INTO guide_dogs (id_escola, id_user, name, gender, breed, birth_date, death_date, retirement_date, weight) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       const query = await Database.query(sql, [
         schoolId,
         userId,
@@ -27,12 +27,13 @@ export default class GuideDogModel {
         gender,
         breed,
         birthDate,
-        deathDate || null,
-        retirementDate || null,
+        deathDate,
+        retirementDate,
         weight,
-        new Date(),
       ]);
-      return query;
+
+      const newGuideDogId = await this.getId(query.rows.insertId);
+      return newGuideDogId;
     } catch (error) {
       throw new Error(`Error creating guide dog: ${error}`);
     }
@@ -83,19 +84,19 @@ export default class GuideDogModel {
         return null;
       }
 
-      const dogs: GuideDog[] = rows.map((row: any) => ({
-        id: row.id,
-        schoolId: row.id_escola,
-        userId: row.id_user,
-        name: row.name,
-        gender: row.gender,
-        breed: row.breed,
-        birthDate: row.birth_date,
-        deathDate: row.death_date,
-        retirementDate: row.retirement_date,
-        weight: row.weight,
-        state: row.state === 1 ? true : false,
-        created: row.created,
+      const dogs: GuideDog[] = rows.map((guideDog) => ({
+        id: guideDog.id,
+        schoolId: guideDog.id_escola,
+        userId: guideDog.id_user,
+        name: guideDog.name,
+        gender: guideDog.gender,
+        breed: guideDog.breed,
+        birthDate: guideDog.birth_date,
+        deathDate: guideDog.death_date,
+        retirementDate: guideDog.retirement_date,
+        weight: guideDog.weight,
+        state: guideDog.state === 1 ? true : false,
+        created: guideDog.created,
       }));
 
       return dogs;
