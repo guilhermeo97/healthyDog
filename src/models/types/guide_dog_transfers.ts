@@ -8,3 +8,9 @@ export type GuideDogTransfer = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+// guideDogId
+// userId
+// startDate
+// endDate
+// transferReason

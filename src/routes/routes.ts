@@ -5,6 +5,7 @@ import SchoolController from "../controllers/school.controller";
 import UserController from "../controllers/user.controller";
 import GuideDogController from "../controllers/guide-dog.controller";
 import MedicationController from "../controllers/medication.controller";
+import GuideDogTransferController from "../controllers/guide_dog_transfers.controller";
 import MedicalConsultationController from "../controllers/medical-consultation.controller";
 
 const router = Router();
@@ -13,6 +14,7 @@ const userController = new UserController();
 const guideController = new GuideDogController();
 const medicationController = new MedicationController();
 const medicalConsultationController = new MedicalConsultationController();
+const guideDogTransferController = new GuideDogTransferController();
 
 // Test's route
 router.get("/", (req: Request, res: Response) => {
@@ -119,6 +121,36 @@ router.delete(
   "/medical-consultation/:id",
   medicalConsultationController.deleteMedicalConsultation.bind(
     medicalConsultationController,
+  ),
+);
+
+// Guide dog transfers' routes
+router.post(
+  "/guide-dog-transfers",
+  guideDogTransferController.create.bind(guideDogTransferController),
+);
+router.get(
+  "/guide-dog-transfers/all",
+  guideDogTransferController.getGuideDogTransfers.bind(
+    guideDogTransferController,
+  ),
+);
+router.get(
+  "/guide-dog-transfers/:id",
+  guideDogTransferController.getGuideDogTransferById.bind(
+    guideDogTransferController,
+  ),
+);
+router.patch(
+  "/guide-dog-transfers/:id",
+  guideDogTransferController.updateGuideDogTransfer.bind(
+    guideDogTransferController,
+  ),
+);
+router.delete(
+  "/guide-dog-transfers/:id",
+  guideDogTransferController.deleteGuideDogTransfer.bind(
+    guideDogTransferController,
   ),
 );
 
