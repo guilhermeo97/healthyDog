@@ -5,12 +5,14 @@ import SchoolController from "../controllers/school.controller";
 import UserController from "../controllers/user.controller";
 import GuideDogController from "../controllers/guide-dog.controller";
 import MedicationController from "../controllers/medication.controller";
+import MedicalConsultationController from "../controllers/medical-consultation.controller";
 
 const router = Router();
 const schoolController = new SchoolController();
 const userController = new UserController();
 const guideController = new GuideDogController();
 const medicationController = new MedicationController();
+const medicalConsultationController = new MedicalConsultationController();
 
 // Test's route
 router.get("/", (req: Request, res: Response) => {
@@ -88,6 +90,36 @@ router.patch(
 router.delete(
   "/medication/:id",
   medicationController.deleteMedication.bind(medicationController),
+);
+
+// Medical consultation's routes
+router.post(
+  "/medical-consultation",
+  medicalConsultationController.create.bind(medicalConsultationController),
+);
+router.get(
+  "/medical-consultation/all",
+  medicalConsultationController.getMedicalConsultations.bind(
+    medicalConsultationController,
+  ),
+);
+router.get(
+  "/medical-consultation/:id",
+  medicalConsultationController.getMedicalConsultationById.bind(
+    medicalConsultationController,
+  ),
+);
+router.patch(
+  "/medical-consultation/:id",
+  medicalConsultationController.updateMedicalConsultation.bind(
+    medicalConsultationController,
+  ),
+);
+router.delete(
+  "/medical-consultation/:id",
+  medicalConsultationController.deleteMedicalConsultation.bind(
+    medicalConsultationController,
+  ),
 );
 
 export { router };

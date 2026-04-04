@@ -1,4 +1,4 @@
-# ealthyDog
+# HealthyDog
 
 ## Objetivo
 
