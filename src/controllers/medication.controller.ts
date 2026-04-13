@@ -87,13 +87,13 @@ export default class MedicationController {
       Retornar a medicamento encontrada com status 200 ou um erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
       const findMedication = await this.medicationModel.getId(id);
       if (!findMedication) {
-        return res.status(204).json({ message: "Medication not found" });
+        return res.status(200).json([]);
       }
       return res.status(200).json(findMedication);
     } catch (error) {
@@ -109,9 +109,6 @@ export default class MedicationController {
     */
     try {
       const findMedications = await this.medicationModel.getAll();
-      if (!findMedications) {
-        return res.status(204).send();
-      }
       return res.status(200).json(findMedications);
     } catch (error) {
       next(error);
@@ -130,7 +127,7 @@ export default class MedicationController {
       Retornar a medicamento atualizada com status 200 ou um erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
@@ -179,9 +176,9 @@ export default class MedicationController {
       };
       const update = await this.medicationModel.update(medication);
       if (!update) {
-        return res.status(204).json({ message: "School not found" });
+        return res.status(404).json({ message: "School not found" });
       }
-      return res.status(200).send(update);
+      return res.status(200).json(update);
     } catch (error) {
       next(error);
     }
@@ -197,17 +194,17 @@ export default class MedicationController {
       Retornar status 204 se a exclusão for bem-sucedida ou um erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
       const deleteResult = await this.medicationModel.delete(id);
       if (!deleteResult) {
         return res
-          .status(400)
+          .status(404)
           .json({ message: "Medication not found or could not be deleted" });
       }
-      return res.status(204).send();
+      return res.status(204).json();
     } catch (error) {
       next(error);
     }

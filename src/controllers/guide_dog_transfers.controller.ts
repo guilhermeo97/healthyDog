@@ -45,7 +45,7 @@ export default class GuideDogTransferController {
         guideDogId: dto.guideDogId,
         userId: dto.userId,
         startDate: new Date(dto.startDate),
-        endDate: dto.endDate ? new Date(dto.endDate) : undefined,
+        endDate: dto.endDate,
         transferReason: dto.transferReason,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -78,17 +78,13 @@ export default class GuideDogTransferController {
     */
 
     try {
-      const id = +req.params.id;
-
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-
       const findGuideDogTransfer = await this.guideDogTransferModel.getId(id);
       if (!findGuideDogTransfer) {
-        return res
-          .status(204)
-          .json({ message: "Guide dog transfer not found" });
+        return res.status(200).json([]);
       }
       return res.status(200).json(findGuideDogTransfer);
     } catch (error) {
@@ -105,9 +101,6 @@ export default class GuideDogTransferController {
 
     try {
       const findGuideDogTransfers = await this.guideDogTransferModel.getAll();
-      if (!findGuideDogTransfers) {
-        return res.status(204).send();
-      }
       return res.status(200).json(findGuideDogTransfers);
     } catch (error) {
       next(error);
@@ -131,7 +124,7 @@ export default class GuideDogTransferController {
     */
 
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
@@ -157,18 +150,18 @@ export default class GuideDogTransferController {
         id,
         guideDogId: dto.guideDogId,
         userId: dto.userId,
-        startDate: dto.startDate ? new Date(dto.startDate) : undefined,
-        endDate: dto.endDate ? new Date(dto.endDate) : undefined,
+        startDate: dto.startDate,
+        endDate: dto.endDate,
         transferReason: dto.transferReason,
         updatedAt: new Date(),
       };
       const update = await this.guideDogTransferModel.update(guideDogTransfer);
       if (!update) {
         return res
-          .status(204)
+          .status(404)
           .json({ message: "Guide dog transfer not found" });
       }
-      return res.status(200).send(update);
+      return res.status(200).json(update);
     } catch (error) {
       next(error);
     }
@@ -189,18 +182,18 @@ export default class GuideDogTransferController {
     */
 
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
 
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
       const deleteResult = await this.guideDogTransferModel.delete(id);
       if (!deleteResult) {
-        return res.status(400).json({
+        return res.status(404).json({
           message: "Guide dog transfer not found or could not be deleted",
         });
       }
-      return res.status(204).send();
+      return res.status(204).json();
     } catch (error) {
       next(error);
     }

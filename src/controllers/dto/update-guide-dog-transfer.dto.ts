@@ -9,11 +9,11 @@ import {
 export default class UpdateGuideDogTransferDto {
   @IsOptional()
   @IsNumber({}, { message: "Guide dog ID must be a number" })
-  guideDogId?: number | null;
+  guideDogId?: number | null | undefined;
 
   @IsOptional()
   @IsNumber({}, { message: "User ID must be a number" })
-  userId?: number | null;
+  userId?: number | null | undefined;
 
   @IsOptional()
   @IsDateString({}, { message: "Start date must be an ISO 8601 date string" })
@@ -37,10 +37,10 @@ export default class UpdateGuideDogTransferDto {
     endDate?: Date | null | undefined,
     transferReason?: string | null | undefined,
   ) {
-    this.guideDogId = guideDogId || null;
-    this.userId = userId || null;
-    this.startDate = startDate || null;
-    this.endDate = endDate || null;
+    this.guideDogId = guideDogId !== undefined ? guideDogId : null;
+    this.userId = userId !== undefined ? userId : null;
+    this.startDate = startDate !== undefined ? startDate : null;
+    this.endDate = endDate !== undefined ? endDate : null;
     this.transferReason = transferReason?.trim() || null;
   }
 }

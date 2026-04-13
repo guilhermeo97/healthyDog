@@ -59,20 +59,18 @@ export default class SchoolController {
       Validar o ID recebido
         Se inválido, retornar erro 400
       Chamar o método getId do modelo de escola para buscar a escola no banco
-        Se nenhuma escola for encontrada, retornar status 204
+        Se nenhuma escola for encontrada, retornar status 404
       Retornar a escola encontrada com status 200 ou um erro apropriado
     */
 
     try {
-      const id = +req.params.id;
-
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-
       const findSchool = await this.schoolModel.getId(id);
       if (!findSchool) {
-        return res.status(204).json({ message: "School not found" });
+        return res.status(200).json([]);
       }
       return res.status(200).json(findSchool);
     } catch (error) {
@@ -86,19 +84,16 @@ export default class SchoolController {
       Validar o status recebido
         Se inválido, retornar erro 400
       Chamar o método getAll do modelo de escola para buscar as escolas no banco
-        Se nenhuma escola for encontrada, retornar status 204
+        Se nenhuma escola for encontrada, retornar status 404
       Retornar as escolas encontradas com status 200 ou um erro apropriado
     */
 
     try {
-      const status = +req.params.status;
+      const status = Number(req.params.status);
       if (status !== 1 && status !== 0 && status !== 3) {
         return res.status(400).json({ message: "Invalid status" });
       }
       const findSchools = await this.schoolModel.getAll(status);
-      if (!findSchools) {
-        return res.status(204).send();
-      }
       return res.status(200).json(findSchools);
     } catch (error) {
       next(error);
@@ -113,17 +108,17 @@ export default class SchoolController {
         Se inválidos, retornar erro 400 com mensagens de validação
       Validar o ID e os dados recebidos
       Chamar o método update do modelo de escola para atualizar os dados no banco
-        Se nenhuma escola for atualizada, retornar status 204
+        Se nenhuma escola for atualizada, retornar status 404
       Retornar a escola atualizada com status 200 ou um erro apropriado
     */
 
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
       const { name, cnpj, email, phone, address, state } = req.body;
-      const dto = new UpdateSchoolDto(name, cnpj, email, phone, address);
+      const dto = new UpdateSchoolDto(name, cnpj, email, phone, address, state);
       const valid = await validate(dto).then((errors) => {
         if (errors.length > 0) {
           const messages = errors
@@ -142,11 +137,11 @@ export default class SchoolController {
         address: dto.address,
         state: dto.state,
       };
-      const update = await this.schoolModel.update(school);
-      if (!update) {
-        return res.status(204).json({ message: "School not found" });
+      const updateSchool = await this.schoolModel.update(school);
+      if (!updateSchool) {
+        return res.status(404).json({ message: "School not found" });
       }
-      return res.status(200).send(update);
+      return res.status(200).json(updateSchool);
     } catch (error) {
       next(error);
     }
@@ -158,23 +153,22 @@ export default class SchoolController {
       Validar o ID recebido
         Se inválido, retornar erro 400
       Chamar o método delete do modelo de escola para remover a escola do banco
-        Se nenhuma escola for deletada, retornar erro 400
+        Se nenhuma escola for deletada, retornar erro 404
       Retornar status 204 se a exclusão for bem-sucedida ou um erro apropriado
     */
 
     try {
-      const id = +req.params.id;
-
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
       const deleteResult = await this.schoolModel.delete(id);
       if (!deleteResult) {
         return res
-          .status(400)
+          .status(404)
           .json({ message: "School not found or could not be deleted" });
       }
-      return res.status(204).send();
+      return res.status(204).json();
     } catch (error) {
       next(error);
     }

@@ -31,7 +31,6 @@ export default class GuideDogController {
         retirementDate,
         weight,
       } = req.body;
-
       const dto = new CreateGuideDogDto(
         schoolId,
         userId,
@@ -43,7 +42,6 @@ export default class GuideDogController {
         retirementDate,
         weight,
       );
-
       const valid = await validate(dto).then((errors) => {
         if (errors.length > 0) {
           const messages = errors
@@ -53,7 +51,6 @@ export default class GuideDogController {
         }
       });
       if (valid) return valid;
-
       const guideDog: GuideDog = {
         schoolId: dto.schoolId,
         userId: dto.userId,
@@ -67,14 +64,13 @@ export default class GuideDogController {
         state: true,
         created: new Date(),
       };
-      const createResult = await this.guideDogModel.create(guideDog);
-      //const newDog = await this.guideDogModel.getId(createResult.rows.insertId);
-      if (!createResult) {
+      const createGuideDog = await this.guideDogModel.create(guideDog);
+      if (!createGuideDog) {
         return res
           .status(404)
           .json({ message: "Guide dog not found after creation" });
       }
-      return res.status(201).json(createResult);
+      return res.status(201).json(createGuideDog);
     } catch (error) {
       next(error);
     }
@@ -88,16 +84,15 @@ export default class GuideDogController {
       Retornar o registro encontrado com status 200 ou um erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-
-      const dog = await this.guideDogModel.getId(id);
-      if (!dog) {
-        return res.status(204).json({ message: "Guide dog not found" });
+      const findGuideDog = await this.guideDogModel.getId(id);
+      if (!findGuideDog) {
+        return res.status(200).json([]);
       }
-      return res.status(200).json(dog);
+      return res.status(200).json(findGuideDog);
     } catch (error) {
       next(error);
     }
@@ -111,17 +106,12 @@ export default class GuideDogController {
       Retornar os registros encontrados com status 200 ou um erro apropriado
     */
     try {
-      const status = +req.params.status;
+      const status = Number(req.params.status);
       if (status !== 1 && status !== 0 && status !== 3) {
         return res.status(400).json({ message: "Invalid status" });
       }
-      const dogs = await this.guideDogModel.getAll(status);
-      if (!dogs) {
-        return res
-          .status(204)
-          .json({ message: "No guide dogs found for the given status" });
-      }
-      return res.status(200).json(dogs);
+      const findGuideDogs = await this.guideDogModel.getAll(status);
+      return res.status(200).json(findGuideDogs);
     } catch (error) {
       next(error);
     }
@@ -136,11 +126,10 @@ export default class GuideDogController {
       Retornar o registro atualizado com status 200 ou erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-
       const {
         schoolId,
         userId,
@@ -153,7 +142,6 @@ export default class GuideDogController {
         weight,
         state,
       } = req.body;
-
       const dto = new UpdateGuideDogDto(
         schoolId,
         userId,
@@ -166,7 +154,6 @@ export default class GuideDogController {
         weight,
         state,
       );
-
       const valid = await validate(dto).then((errors) => {
         if (errors.length > 0) {
           const messages = errors
@@ -176,7 +163,6 @@ export default class GuideDogController {
         }
       });
       if (valid) return valid;
-
       const guideDog: Partial<GuideDog> = {
         id,
         schoolId: dto.schoolId,
@@ -192,7 +178,7 @@ export default class GuideDogController {
       };
       const updated = await this.guideDogModel.update(guideDog);
       if (!updated) {
-        return res.status(204).json({ message: "Guide dog not found" });
+        return res.status(404).json({ message: "Guide dog not found" });
       }
       return res.status(200).json(updated);
     } catch (error) {
@@ -208,17 +194,17 @@ export default class GuideDogController {
       Retornar status 204 se exclusão bem‑sucedida ou erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-      const result = await this.guideDogModel.delete(id);
-      if (!result) {
+      const deleteGuideDog = await this.guideDogModel.delete(id);
+      if (!deleteGuideDog) {
         return res
-          .status(400)
+          .status(404)
           .json({ message: "Guide dog not found or could not be deleted" });
       }
-      return res.status(204).send();
+      return res.status(204).json();
     } catch (error) {
       next(error);
     }

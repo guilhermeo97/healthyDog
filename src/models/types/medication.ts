@@ -2,17 +2,17 @@ export type MedicationType = "VACCINE" | "DEWORMER" | "ANTIPARASITIC";
 
 export type Medication = {
   id?: number;
-  guideDogId: number | null;
+  guideDogId: number | null | undefined;
   userId: number | null | undefined;
-  manufacturer: string | null;
-  applicationDate: Date | null;
+  manufacturer: string | null | undefined;
+  applicationDate: Date | null | undefined;
   expirationDate: Date | null | undefined;
-  isMandatory: boolean | null;
-  veterinarianCrmv: string | null;
-  veterinarianName: string | null;
-  medicationType: MedicationType | null;
-  createdAt: Date;
-  updatedAt: Date;
+  isMandatory: boolean | null | undefined;
+  veterinarianCrmv: string | null | undefined;
+  veterinarianName: string | null | undefined;
+  medicationType: MedicationType | null | undefined;
+  createdAt: Date | null | undefined;
+  updatedAt: Date | null | undefined;
 };
 
 // id

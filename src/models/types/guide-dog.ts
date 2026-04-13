@@ -1,16 +1,16 @@
 export type GuideDog = {
   id?: number;
-  schoolId: number | null; // corresponds to id_escola
+  schoolId: number | null | undefined; // corresponds to id_escola
   userId: number | null | undefined; // corresponds to id_user
-  name: string | null;
-  gender: "M" | "F" | null;
-  breed: string | null;
-  birthDate: Date | null;
+  name: string | null | undefined;
+  gender: "M" | "F" | null | undefined;
+  breed: string | null | undefined;
+  birthDate: Date | null | undefined;
   deathDate: Date | null | undefined;
   retirementDate: Date | null | undefined;
-  weight: number | null;
-  state: boolean | null;
-  created: Date | null;
+  weight: number | null | undefined;
+  state: boolean | null | undefined;
+  created: Date | null | undefined;
 };
 
 // id,

@@ -1,19 +1,17 @@
-import type { School } from "./school";
-
 export type User = {
-  id?: number;
-  school: number;
-  fullName: string;
-  cpf: string;
-  birthDate: Date;
-  acessType: string;
-  email: string;
-  phone: string;
-  address: string;
-  password: string;
+  id?: number | null | undefined;
+  school: number | null | undefined;
+  fullName: string | null | undefined;
+  cpf: string | null | undefined;
+  birthDate: Date | null | undefined;
+  acessType: string | null | undefined;
+  email: string | null | undefined;
+  phone: string | null | undefined;
+  address: string | null | undefined;
+  password: string | null | undefined;
   guideDog?: number | null | undefined;
-  state: boolean;
-  created: Date;
+  state: boolean | null | undefined;
+  created: Date | null | undefined;
 };
 
 // id,

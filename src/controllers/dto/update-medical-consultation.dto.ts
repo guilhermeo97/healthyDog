@@ -44,11 +44,24 @@ export default class UpdateMedicalConsultationDto {
     veterinarianName?: string | null | undefined,
     consultationNotes?: string | null | undefined,
   ) {
-    this.guideDogId = guideDogId || null;
-    this.userId = userId || null;
-    this.consultationDate = consultationDate || null;
-    this.veterinarianCrmv = veterinarianCrmv || null;
-    this.veterinarianName = veterinarianName || null;
-    this.consultationNotes = consultationNotes || null;
+    this.guideDogId =
+      guideDogId !== undefined && guideDogId !== null ? guideDogId : null;
+    this.userId = userId !== undefined && userId !== null ? userId : null;
+    this.consultationDate =
+      consultationDate !== undefined && consultationDate !== null
+        ? consultationDate
+        : null;
+    this.veterinarianCrmv =
+      veterinarianCrmv !== undefined && veterinarianCrmv !== null
+        ? veterinarianCrmv
+        : null;
+    this.veterinarianName =
+      veterinarianName !== undefined && veterinarianName !== null
+        ? veterinarianName
+        : null;
+    this.consultationNotes =
+      consultationNotes !== undefined && consultationNotes !== null
+        ? consultationNotes
+        : null;
   }
 }

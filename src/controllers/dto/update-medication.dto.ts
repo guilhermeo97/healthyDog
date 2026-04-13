@@ -47,20 +47,23 @@ export default class UpdateMedicationDto {
     userId?: number | null | undefined | null,
     manufacturer?: string | undefined | null,
     applicationDate?: Date | undefined | null,
-    expirationDate?: Date | null | undefined | null,
+    expirationDate?: Date | null | undefined,
     isMandatory?: boolean | undefined | null,
     veterinarianCrmv?: string | undefined | null,
     veterinarianName?: string | undefined | null,
     medicationType?: MedicationType | undefined | null,
   ) {
-    this.guideDogId = guideDogId || null;
-    this.userId = userId || null;
-    this.manufacturer = manufacturer || null;
-    this.applicationDate = applicationDate || null;
-    this.expirationDate = expirationDate || null;
-    this.isMandatory = isMandatory || null;
-    this.veterinarianCrmv = veterinarianCrmv || null;
-    this.veterinarianName = veterinarianName || null;
-    this.medicationType = medicationType || null;
+    this.guideDogId = guideDogId !== undefined ? guideDogId : null;
+    this.userId = userId !== undefined ? userId : null;
+    this.manufacturer = manufacturer !== undefined ? manufacturer : null;
+    this.applicationDate =
+      applicationDate !== undefined ? applicationDate : null;
+    this.expirationDate = expirationDate !== undefined ? expirationDate : null;
+    this.isMandatory = isMandatory !== undefined ? isMandatory : null;
+    this.veterinarianCrmv =
+      veterinarianCrmv !== undefined ? veterinarianCrmv : null;
+    this.veterinarianName =
+      veterinarianName !== undefined ? veterinarianName : null;
+    this.medicationType = medicationType !== undefined ? medicationType : null;
   }
 }

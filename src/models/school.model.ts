@@ -1,82 +1,81 @@
 import type { School } from "./types/school";
 import Database from "../database/database";
+import type { ResultSetHeader } from "mysql2/typings/mysql/lib/protocol/packets/ResultSetHeader";
 
 export default class SchoolModel {
   constructor() {}
-  async getAll(status: number) {
-    try {
-      let sql = "";
-      if (status == 1 || status == 0) {
-        sql = "SELECT * FROM schools WHERE state = ?;";
-      } else if (status == 3) {
-        sql = "SELECT * FROM schools;";
-      }
-      const query = await Database.query(sql, [status]);
-      const rows = query.rows;
-      if (rows.length === 0) {
-        return null;
-      }
-      const schools: School[] = rows.map((school) => {
-        return {
-          id: school.id,
-          name: school.name,
-          cnpj: school.cnpj,
-          email: school.email,
-          phone: school.phone,
-          address: school.address,
-          state: school.state === 1 ? true : false,
-          created: school.created,
-        };
-      });
-
-      return schools;
-    } catch (error) {
-      throw new Error("Error fetching schools: " + error);
-    }
-  }
 
   async create(school: School) {
     try {
-      const { name, cnpj, email, phone, address } = school;
       const sql =
         "INSERT INTO schools (name, cnpj, email, phone, address) VALUES (?, ?, ?, ?, ?)";
-      const query = await Database.query(sql, [
-        name,
-        cnpj,
-        email,
-        phone,
-        address,
+      const query = await Database.query<ResultSetHeader>(sql, [
+        school.name,
+        school.cnpj,
+        school.email,
+        school.phone,
+        school.address,
       ]);
-      const findNewSchool = await this.getId(query.rows.insertId);
+      const findNewSchool = await this.getId(query.insertId);
       return findNewSchool;
-    } catch (error) {
-      throw new Error("Error creating school: " + error);
+    } catch (error: unknown) {
+      console.error("Database error:", error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Erro desconhecido no banco de dados");
     }
   }
 
   async getId(id: number) {
     try {
       const sql = "SELECT * FROM schools WHERE id = ?";
-      const query = await Database.query(sql, [id.toString()]);
-      if (query.rows.length === 0) {
+      const query = await Database.query<School[]>(sql, [id]);
+      if (query.length === 0) {
         return null;
       }
-      const row = query.rows[0];
+      const row = query[0];
+      const mappedSchool = this.mapRowToSchool(row);
+      return mappedSchool;
+    } catch (error: unknown) {
+      console.error("Database error:", error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Erro desconhecido no banco de dados");
+    }
+  }
 
-      const school: School = {
-        id: row.id,
-        name: row.name,
-        cnpj: row.cnpj,
-        email: row.email,
-        phone: row.phone,
-        address: row.address,
-        state: row.state === 1 ? true : false,
-        created: row.created,
-      };
-
-      return school;
-    } catch (error) {
-      throw new Error("Error fetching school by ID: " + error);
+  async getAll(status: number) {
+    try {
+      let sql = "";
+      let statusFilter = 3;
+      if (status == 1 || status == 0) {
+        sql = "SELECT * FROM schools WHERE state = ?;";
+        statusFilter = status;
+      } else if (status == 3) {
+        sql = "SELECT * FROM schools;";
+      }
+      if (sql === "") {
+        return [];
+      }
+      const query = await Database.query<School[]>(
+        sql,
+        statusFilter === 3 ? [] : [statusFilter],
+      );
+      if (query.length === 0) {
+        return [];
+      }
+      const mappedSchools: School[] = query.map((school) => {
+        return this.mapRowToSchool(school);
+      });
+      return mappedSchools;
+    } catch (error: unknown) {
+      console.error("Database error:", error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Erro desconhecido no banco de dados");
     }
   }
 
@@ -86,31 +85,38 @@ export default class SchoolModel {
       if (!findSchool) {
         return null;
       }
-      findSchool.name = school.name || findSchool.name;
-      findSchool.cnpj = school.cnpj || findSchool.cnpj;
-      findSchool.email = school.email || findSchool.email;
-      findSchool.phone = school.phone || findSchool.phone;
-      findSchool.address = school.address || findSchool.address;
+      findSchool.name = school.name !== null ? school.name : findSchool.name;
+      findSchool.cnpj = school.cnpj !== null ? school.cnpj : findSchool.cnpj;
+      findSchool.email =
+        school.email !== null ? school.email : findSchool.email;
+      findSchool.phone =
+        school.phone !== null ? school.phone : findSchool.phone;
+      findSchool.address =
+        school.address !== null ? school.address : findSchool.address;
       findSchool.state =
-        school.state !== undefined ? school.state : findSchool.state;
+        school.state !== null ? school.state : findSchool.state;
 
       const sql = `UPDATE schools SET name = ?, cnpj = ?, email = ?, phone = ?, address = ?, state = ? WHERE id = ?`;
-      const query = await Database.query(sql, [
+      const query = await Database.query<ResultSetHeader>(sql, [
         findSchool.name,
         findSchool.cnpj,
         findSchool.email,
         findSchool.phone,
         findSchool.address,
         findSchool.state,
-        findSchool.id!.toString(),
+        findSchool.id,
       ]);
-      if (query.rows.affectedRows === 0) {
+      if (query.affectedRows === 0) {
         return null;
       }
       const updatedSchool = await this.getId(findSchool.id!);
       return updatedSchool;
-    } catch (error) {
-      throw new Error("Error updating school: " + error);
+    } catch (error: unknown) {
+      console.error("Database error:", error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Erro desconhecido no banco de dados");
     }
   }
 
@@ -121,13 +127,30 @@ export default class SchoolModel {
         return null;
       }
       const sql = "UPDATE schools SET state = 0 WHERE id = ?";
-      const query = await Database.query(sql, [id.toString()]);
-      if (query.rows.affectedRows === 0) {
+      const query = await Database.query<ResultSetHeader>(sql, [id]);
+      if (query.affectedRows === 0) {
         return null;
       }
       return true;
-    } catch (error) {
-      throw new Error("Error deleting school: " + error);
+    } catch (error: unknown) {
+      console.error("Database error:", error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Erro desconhecido no banco de dados");
     }
+  }
+
+  private mapRowToSchool(row: any): School {
+    return {
+      id: row.id === undefined ? null : row.id,
+      name: row.name === undefined ? null : row.name,
+      cnpj: row.cnpj === undefined ? null : row.cnpj,
+      email: row.email === undefined ? null : row.email,
+      phone: row.phone === undefined ? null : row.phone,
+      address: row.address === undefined ? null : row.address,
+      state: row.state === 1 ? true : false,
+      created: row.created === undefined ? null : new Date(row.created),
+    };
   }
 }

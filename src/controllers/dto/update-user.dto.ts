@@ -9,46 +9,51 @@ import {
 
 export default class UpdateUserDto {
   @IsOptional()
-  school?: number;
+  school?: number | null | undefined;
 
   @IsOptional()
   @IsString({ message: "Full name must be a string" })
   @MinLength(3, { message: "Full name must be at least 3 characters long" })
-  fullName?: string;
+  fullName?: string | null | undefined;
 
   @IsOptional()
   @IsString({ message: "CPF must be a string" })
   @MinLength(11, { message: "CPF must be at least 11 characters long" })
-  cpf?: string;
+  cpf?: string | null | undefined;
 
   @IsOptional()
   @IsDateString({}, { message: "Birth date must be an ISO 8601 date string" })
-  birthDate?: Date;
+  birthDate?: Date | null | undefined;
 
   @IsOptional()
   @IsString({ message: "Access type must be a string" })
-  acessType?: string;
+  acessType?: string | null | undefined;
 
   @IsOptional()
   @IsEmail({}, { message: "Invalid email format" })
-  email?: string;
+  email?: string | null | undefined;
 
   @IsOptional()
   @IsString({ message: "Phone must be a string" })
   @MinLength(10, { message: "Phone must be at least 10 characters long" })
-  phone?: string;
+  phone?: string | null | undefined;
+
+  @IsOptional()
+  @IsString({ message: "Address must be a string" })
+  @MinLength(5, { message: "Address must be at least 5 characters long" })
+  address?: string | null | undefined;
 
   @IsOptional()
   @IsString({ message: "Password must be a string" })
   @MinLength(6, { message: "Password must be at least 6 characters long" })
-  password?: string;
+  password?: string | null | undefined;
 
   @IsOptional()
-  guideDog?: number;
+  guideDog?: number | null | undefined;
 
   @IsOptional()
   @IsBoolean({ message: "State must be a boolean" })
-  state?: boolean;
+  state?: boolean | null | undefined;
 
   constructor(
     school?: number,
@@ -58,19 +63,21 @@ export default class UpdateUserDto {
     acessType?: string,
     email?: string,
     phone?: string,
-    password?: string,
+    address?: string,
+    password?: string | null | undefined,
     guideDog?: number,
     state?: boolean,
   ) {
-    if (school !== undefined) this.school = school;
-    if (fullName !== undefined) this.fullName = fullName.trim();
-    if (cpf !== undefined) this.cpf = cpf.trim();
-    if (birthDate !== undefined) this.birthDate = birthDate;
-    if (acessType !== undefined) this.acessType = acessType.trim();
-    if (email !== undefined) this.email = email.trim();
-    if (phone !== undefined) this.phone = phone.trim();
-    if (password !== undefined) this.password = password;
-    if (guideDog !== undefined) this.guideDog = guideDog;
-    if (state !== undefined) this.state = state;
+    this.school = school !== undefined ? school : null;
+    this.fullName = fullName !== undefined ? fullName.trim() : null;
+    this.cpf = cpf !== undefined ? cpf.trim() : null;
+    this.birthDate = birthDate !== undefined ? birthDate : null;
+    this.acessType = acessType !== undefined ? acessType.trim() : null;
+    this.email = email !== undefined ? email.trim() : null;
+    this.phone = phone !== undefined ? phone.trim() : null;
+    this.address = address !== undefined ? address.trim() : null;
+    this.password = password !== undefined ? password : null;
+    this.guideDog = guideDog !== undefined ? guideDog : null;
+    this.state = state !== undefined ? state : null;
   }
 }

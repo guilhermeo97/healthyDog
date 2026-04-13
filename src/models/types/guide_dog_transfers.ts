@@ -5,8 +5,8 @@ export type GuideDogTransfer = {
   startDate: Date | null | undefined;
   endDate: Date | null | undefined;
   transferReason: string | null | undefined;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null | undefined;
+  updatedAt: Date | null | undefined;
 };
 
 // guideDogId

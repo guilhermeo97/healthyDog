@@ -88,16 +88,15 @@ export default class UserController {
       Retornar o usuário encontrado com status 200 ou um erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-
-      const user = await this.userModel.getId(id);
-      if (!user) {
-        return res.status(204).json({ message: "User not found" });
+      const findUser = await this.userModel.getId(id);
+      if (!findUser) {
+        return res.status(200).json([]);
       }
-      return res.status(200).json(user);
+      return res.status(200).json(findUser);
     } catch (error) {
       next(error);
     }
@@ -111,15 +110,12 @@ export default class UserController {
       Retornar os usuários encontrados com status 200 ou um erro apropriado
     */
     try {
-      const status = +req.params.status;
+      const status = Number(req.params.status);
       if (status !== 1 && status !== 0 && status !== 3) {
         return res.status(400).json({ message: "Invalid status" });
       }
-      const users = await this.userModel.getAll(status);
-      if (!users) {
-        return res.status(204).json({ message: "No users found" });
-      }
-      return res.status(200).json(users);
+      const findUsers = await this.userModel.getAll(status);
+      return res.status(200).json(findUsers);
     } catch (error) {
       next(error);
     }
@@ -134,11 +130,10 @@ export default class UserController {
       Retornar o usuário atualizado com status 200 ou um erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
-
       const {
         school,
         fullName,
@@ -147,6 +142,7 @@ export default class UserController {
         acessType,
         email,
         phone,
+        address,
         password,
         guideDog,
         state,
@@ -160,11 +156,11 @@ export default class UserController {
         acessType,
         email,
         phone,
+        address,
         password,
         guideDog,
         state,
       );
-
       const valid = await validate(dto).then((errors) => {
         if (errors.length > 0) {
           const messages = errors
@@ -174,7 +170,6 @@ export default class UserController {
         }
       });
       if (valid) return valid;
-
       const user: Partial<User> = {
         id,
         school: dto.school,
@@ -184,17 +179,18 @@ export default class UserController {
         acessType: dto.acessType,
         email: dto.email,
         phone: dto.phone,
+        address: dto.address,
         password: dto.password,
         guideDog: dto.guideDog,
         state: dto.state,
       };
-      const updated = await this.userModel.update(user);
-      if (!updated) {
+      const updatedUser = await this.userModel.update(user);
+      if (!updatedUser) {
         return res
-          .status(204)
-          .json({ message: "User not found or no changes made" });
+          .status(404)
+          .json({ message: "User not found or could not be updated" });
       }
-      return res.status(200).json(updated);
+      return res.status(200).json(updatedUser);
     } catch (error) {
       next(error);
     }
@@ -208,17 +204,17 @@ export default class UserController {
       Retornar status 204 se a exclusão for bem-sucedida ou um erro apropriado
     */
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
       const result = await this.userModel.delete(id);
       if (!result) {
         return res
-          .status(400)
+          .status(404)
           .json({ message: "User not found or could not be deleted" });
       }
-      return res.status(204).send();
+      return res.status(204).json();
     } catch (error) {
       next(error);
     }

@@ -84,7 +84,7 @@ export default class MedicalConsultationController {
     */
 
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
 
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
@@ -93,9 +93,7 @@ export default class MedicalConsultationController {
       const findMedicalConsultation =
         await this.medicalConsultationModel.getId(id);
       if (!findMedicalConsultation) {
-        return res
-          .status(204)
-          .json({ message: "Medical consultation not found" });
+        return res.status(200).json([]);
       }
       return res.status(200).json(findMedicalConsultation);
     } catch (error) {
@@ -117,9 +115,6 @@ export default class MedicalConsultationController {
     try {
       const findMedicalConsultations =
         await this.medicalConsultationModel.getAll();
-      if (!findMedicalConsultations) {
-        return res.status(204).send();
-      }
       return res.status(200).json(findMedicalConsultations);
     } catch (error) {
       next(error);
@@ -143,7 +138,7 @@ export default class MedicalConsultationController {
     */
 
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
@@ -186,10 +181,10 @@ export default class MedicalConsultationController {
         await this.medicalConsultationModel.update(medicalConsultation);
       if (!update) {
         return res
-          .status(204)
+          .status(404)
           .json({ message: "Medical consultation not found" });
       }
-      return res.status(200).send(update);
+      return res.status(200).json(update);
     } catch (error) {
       next(error);
     }
@@ -210,18 +205,18 @@ export default class MedicalConsultationController {
     */
 
     try {
-      const id = +req.params.id;
+      const id = Number(req.params.id);
 
       if (!id || id <= 0 || isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
       const deleteResult = await this.medicalConsultationModel.delete(id);
       if (!deleteResult) {
-        return res.status(400).json({
+        return res.status(404).json({
           message: "Medical consultation not found or could not be deleted",
         });
       }
-      return res.status(204).send();
+      return res.status(204).json();
     } catch (error) {
       next(error);
     }

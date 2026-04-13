@@ -13,9 +13,9 @@ app.disable("x-powered-by");
 
 // Banco de dados
 async function consulta() {
-  const c = await Database.query("SELECT 1");
+  const c = await Database.query<any[]>("SELECT 1");
   console.log(
-    c.rows[0]["1"] === 1
+    c[0]["1"] === 1
       ? "Conexão com o banco de dados bem-sucedida!"
       : "Falha na conexão com o banco de dados.",
   );
